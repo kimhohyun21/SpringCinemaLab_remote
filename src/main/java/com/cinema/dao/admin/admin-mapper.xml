@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cinema.admin.dao.admin-mapper"> 
+	<select id="AMovieAllList" resultType="movie">
+	 	SELECT mno,title,opendate,type,rank,movielike FROM movielist
+	</select>
+	<select id="RList" parameterType="java.util.Map" resultType="reservelist">
+	 <![CDATA[
+		SELECT rno,title,name,rdate,cancel,refund, num 
+		FROM (SELECT rno,title,name,rdate,cancel,refund, ROWNUM as num 
+		FROM (SELECT rno,title,name,rdate,cancel,refund 
+		FROM reservelist NATURAL JOIN member NATURAL JOIN THEATERLIST NATURAL JOIN MOVIELIST ORDER BY RNO DESC))
+		WHERE num BETWEEN #{start} AND #{end} 
+	]]>
+	</select>
+	<select id="RTotal" resultType="int">
+		SELECT CEIL(COUNT(*)/10) FROM reservelist
+	</select>
+	<select id="RContent" resultType="reservelist">
+		SELECT rno,title,name,rdate,cancel,refund,paymentid,seat,ticket,payment,paytype,serverpay,shopid,cardoknum,theater,theaterno,movietime 
+		FROM reservelist NATURAL JOIN THEATERLIST NATURAL JOIN member NATURAL JOIN MOVIELIST WHERE rno=#{no}
+	</select>
+	<select id="AMovieData" parameterType="int" resultType="movie">
+		SELECT poster,title,opendate,grade,genre,runtime,director,cast,content,trailer,type 
+		FROM MOVIELIST WHERE mno=#{no}
+	</select>
+	<update id="AMovieModify" parameterType="movie">	
+		UPDATE movieList SET poster=#{poster},title=#{title},grade=#{grade},type=#{type},
+		runtime=#{runtime},content=#{content},director=#{director},genre=#{genre},
+		cast=#{cast},trailer=#{trailer},opendate=#{opendate} WHERE mNo=#{mNo}
+	</update>
+	<insert id="AMovieInsert" parameterType="movie">
+		INSERT INTO MOVIELIST(mno,poster,title,opendate,grade,genre,runtime,director,cast,content,trailer,type)
+		VALUES((SELECT max(mno)+1 FROM movieList),#{poster},#{title},#{opendate},
+		#{grade},#{genre},#{runtime},#{director},#{cast},#{content},#{trailer},#{type})
+	</insert>
+	<select id="AMovieCount" resultType="int">
+		SELECT COUNT(*) FROM movieList
+	</select>
+	<select id="AcharAllData" resultType="movie">
+		SELECT cno,cname,img,mno1,mno2,mno3,mno4,mno5 FROM characterlist
+	</select>
+	<select id="AmovieActorData" parameterType="int" resultType="movie">
+		SELECT cname,cno,mno1,mno2,mno3,mno4,mno5
+		 FROM characterList WHERE mNo1=#{no } or mNo2=#{no } or mNo3=#{no } or mNo4=#{no } or mNo5=#{no }
+	</select>
+	<select id="AactorMno" resultType="int" parameterType="java.util.Map">
+	 <![CDATA[
+		SELECT NVL(${mno}, 0) FROM characterList WHERE cno=#{cno}
+	 ]]>
+	</select>
+	<update id="AactorDeleteMno" parameterType="java.util.Map">
+		UPDATE characterList SET ${mno}=0 WHERE cno=#{cno}
+	</update>
+	<update id="AactorInsertMno" parameterType="java.util.Map">
+		UPDATE characterList SET ${mno}=#{movieNo} WHERE cno=#{cno}
+	</update>
+	<select id="AactorAllMno" parameterType="int" resultType="movie">
+		SELECT mno1,mno2,mno3,mno4,mno5 FROM characterList WHERE cno=#{cno}
+	</select>
+	<select id="AcharCount" resultType="int">
+		SELECT COUNT(*) FROM characterList
+	</select>
+	<select id="AcharContent" parameterType="int" resultType="movie">
+		SELECT cno,cname,img,mno1,mno2,mno3,mno4,mno5 FROM characterlist WHERE cno=#{cno}
+	</select>
+	<select id="AmovieAllData" resultType="movie">
+		SELECT mNo,title FROM movieList
+	</select>
+	<update id="ACmodify" parameterType="java.util.Map">
+		UPDATE characterList SET cname=#{cname}, img=#{img} WHERE cno=#{cno} 
+	</update>
+	<insert id="ACharInsert" parameterType="java.util.Map">
+		INSERT INTO characterList VALUES((SELECT NVL(MAX(CNO+1),1) FROM characterList),
+		#{name},#{img},0,0,0,0,0)
+	</insert>
+</mapper>

@@ -101,7 +101,7 @@ function reloadTime(){
 	counter= 59;
 	$.ajax({
 		url: "main.do",
-		async: true
+		async: false
 	});
 	timer1=setTimeout("outMove()", 1739000);
 }      	

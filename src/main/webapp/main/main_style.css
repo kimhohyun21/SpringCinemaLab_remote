@@ -16,7 +16,7 @@ body{
 	height: 200px;
 }
 img.logo{
-	width: 300px;
+	width: 18em;
 	position: relative;
 	top: 40px;
 	left: -6px;
@@ -122,8 +122,9 @@ button.refresh:active {
 #nav ul{
 	list-style: none outside none;
 	position: relative;
-    left: 20px;
-    width: 610px;
+    left: 1em;
+    width: 38em;
+    max-width: 610px;
     text-align: center;
 }
 #nav ul li{
@@ -173,7 +174,7 @@ button.refresh:active {
 	border-radius:90px 90px 90px 90px;
 	-moz-border-radius:90px 90px 90px 90px;
 	-webkit-border-radius:90px 90px 90px 90px;
-	width:200px;
+	width:7em;
 	padding:5px 90px;
 	margin:0 auto;
 }

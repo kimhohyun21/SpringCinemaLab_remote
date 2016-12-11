@@ -1,2 +1,1 @@
-# SpirngCinemaLab
-SpirngCinemaLab for Marvel Cinema (Final Project)
+# SpringCinemaLab_remote
